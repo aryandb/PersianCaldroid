@@ -108,14 +108,14 @@ public class PersianDate extends AbstractDate implements Serializable {
     @Override
     public String toString() {
         Locale locale = new Locale("en");
-        return String.format(locale, "%04d", year) + "/" + String.format(locale, "%02d", month) + "/" + String.format(locale, "%02d", day);
+        return String.format(locale, "%04d", year) + "-" + String.format(locale, "%02d", month) + "-" + String.format(locale, "%02d", day);
     }
 
 
 
     public String toStringInPersian() {
         Locale locale = new Locale("fa");
-        return String.format(locale, "%04d", year) + "/" + String.format(locale, "%02d", month) + "/" + String.format(locale, "%02d", day);
+        return String.format(locale, "%04d", year) + "-" + String.format(locale, "%02d", month) + "-" + String.format(locale, "%02d", day);
     }
 
     public PersianDate clone() {
