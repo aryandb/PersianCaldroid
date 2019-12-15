@@ -105,10 +105,45 @@ public class PersianDate extends AbstractDate implements Serializable {
         return persianMonthName[month];
     }
 
+    public int[] jalali_to_gregorian(int jy, int jm, int jd){
+        int gy;
+        if(jy>979){
+            gy=1600;
+            jy-=979;
+        }else{
+            gy=621;
+        }
+        int days = (365 * jy) + (((int)(jy / 33)) * 8) + ((int)(((jy % 33) + 3) / 4)) + 78 + jd + ((jm < 7)?(jm - 1) * 31:((jm - 7) * 30) + 186);
+        gy += 400 * ((int)(days / 146097));
+        days %= 146097;
+        if(days > 36524){
+            gy += 100 * ((int)(--days / 36524));
+            days %= 36524;
+            if (days >= 365)days++;
+        }
+        gy += 4 * ((int)(days / 1461));
+        days %= 1461;
+        if(days > 365){
+            gy += (int)((days - 1) / 365);
+            days = (days - 1) % 365;
+        }
+        int gd = days + 1;
+        int[] sal_a = {0,31,((gy % 4 == 0 && gy % 100 != 0) || (gy % 400 == 0))?29:28,31,30,31,30,31,31,30,31,30,31};
+        int gm;
+        for(gm = 0;gm < 13;gm++){
+            int v = sal_a[gm];
+            if(gd <= v)break;
+            gd -= v;
+        }
+        int[] out = {gy,gm,gd};
+        return out;
+    }
+    
     @Override
     public String toString() {
         Locale locale = new Locale("en");
-        return String.format(locale, "%04d", year) + "-" + String.format(locale, "%02d", month) + "-" + String.format(locale, "%02d", day);
+        int[] date = jalali_to_gregorian(year, month, day);
+        return String.format(locale, "%04d", date[0]) + "-" + String.format(locale, "%02d", date[1]) + "-" + String.format(locale, "%02d", date[2]);
     }
 
 
